@@ -32,16 +32,16 @@ public class Story {
     @JoinColumn(name = "emotion_id")
     private Emotion emotion;
 
-    @OneToMany(mappedBy = "story")
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Chapter> chapters;
 
-    @OneToMany(mappedBy = "story")
+    @OneToMany(mappedBy = "story" , cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Favorite> favorites;
 
-    @OneToMany(mappedBy = "story")
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "story")
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<StoryMusic> storyMusic;
 }
 
