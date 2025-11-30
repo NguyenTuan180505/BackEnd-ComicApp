@@ -1,6 +1,7 @@
 package com.comicapp.comic_api.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.Fetch;
 import lombok.Data;
 
 import java.time.LocalDateTime;
