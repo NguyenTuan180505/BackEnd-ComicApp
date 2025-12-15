@@ -38,4 +38,13 @@ public class MusicController {
         musicService.deleteMusic(id);
         return ResponseEntity.ok("Delete music success");
     }
+    // PUT /music/{id}
+    // API Sửa thông tin bài hát
+    @PutMapping("/{id}")
+    public ResponseEntity<MusicResponse> updateMusic(
+            @PathVariable Long id,
+            @RequestBody MusicCreateRequest request
+    ) {
+        return ResponseEntity.ok(musicService.updateMusic(id, request));
+    }
 }

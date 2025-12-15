@@ -21,4 +21,6 @@ public class StoryMusicController {
     public ResponseEntity<String> addMusicToStory(@RequestBody StoryMusicCreateRequest request) {
         return ResponseEntity.ok(storyMusicService.addMusicToStory(request));
     }
+
+
 }

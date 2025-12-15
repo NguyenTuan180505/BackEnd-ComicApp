@@ -50,4 +50,20 @@ public class MusicService {
         response.setCreatedAt(music.getCreatedAt());
         return response;
     }
+
+    // --- BỔ SUNG: Sửa thông tin nhạc ---
+    public MusicResponse updateMusic(Long id, MusicCreateRequest request) {
+        // 1. Tìm bài hát cũ xem có tồn tại không
+        Music existingMusic = musicRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Music not found with id: " + id));
+
+        // 2. Cập nhật thông tin mới
+        existingMusic.setName(request.getName());
+        existingMusic.setUrl(request.getUrl());
+
+        // 3. Lưu lại (Lúc này JPA tự hiểu là Update vì object đã có ID)
+        Music updatedMusic = musicRepository.save(existingMusic);
+
+        return toResponse(updatedMusic);
+    }
 }
