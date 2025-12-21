@@ -28,7 +28,7 @@ public class AuthService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("tên đăng nhập hoặc mật khẩu không đúng");
         }
-        String token = jwtUtils.generateToken(user.getUsername());
+        String token = jwtUtils.generateToken(user.getUsername(),user.getRole().toString());
         LoginResponse response = new LoginResponse();
         response.setToken(token);
         return response;
