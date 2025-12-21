@@ -1,6 +1,7 @@
 package com.comicapp.comic_api.service;
 
 import com.comicapp.comic_api.dto.request.StoryMusicCreateRequest;
+import com.comicapp.comic_api.dto.response.MusicResponse;
 import com.comicapp.comic_api.entity.Music;
 import com.comicapp.comic_api.entity.Story;
 import com.comicapp.comic_api.entity.StoryMusic;
@@ -9,6 +10,9 @@ import com.comicapp.comic_api.repository.StoryMusicRepository;
 import com.comicapp.comic_api.repository.StoryRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StoryMusicService {
@@ -48,6 +52,24 @@ public class StoryMusicService {
         storyMusicRepository.save(storyMusic);
 
         return "Add music to story success!";
+    }
+    public List<MusicResponse> getMusicByStoryId(Long storyId) {
+
+        // 1. Lấy danh sách StoryMusic theo storyId
+        List<StoryMusic> storyMusics = storyMusicRepository.findByStoryId(storyId);
+
+        // 2. Map sang MusicResponse
+        return storyMusics.stream().map(storyMusic -> {
+            Music music = storyMusic.getMusic();
+
+            MusicResponse response = new MusicResponse();
+            response.setId(music.getId());
+            response.setName(music.getName());
+            response.setUrl(music.getUrl());
+            response.setCreatedAt(music.getCreatedAt());
+
+            return response;
+        }).collect(Collectors.toList());
     }
 
 

@@ -22,5 +22,13 @@ public class StoryMusicController {
         return ResponseEntity.ok(storyMusicService.addMusicToStory(request));
     }
 
+    @GetMapping("/story/{storyId}")
+    public ResponseEntity<?> getMusicByStoryId(@PathVariable Long storyId) {
+        return ResponseEntity.ok(
+                storyMusicService.getMusicByStoryId(storyId)
+        );
+    }
+
+
 
 }
