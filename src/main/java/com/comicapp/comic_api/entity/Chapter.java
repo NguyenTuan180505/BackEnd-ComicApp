@@ -16,7 +16,6 @@ public class Chapter {
     @ManyToOne
     @JoinColumn(name = "story_id")
     private Story story;
-
     private String title;
 
     private String content;

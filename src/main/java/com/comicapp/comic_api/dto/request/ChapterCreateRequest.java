@@ -8,5 +8,6 @@ public class ChapterCreateRequest {
     private String title;
     private String content;
     private Integer chapterNumber;
+    private Boolean isLocked;
 }
 
