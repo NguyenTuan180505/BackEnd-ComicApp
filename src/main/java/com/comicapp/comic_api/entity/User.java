@@ -23,7 +23,8 @@ public class User {
 
     private String email;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
