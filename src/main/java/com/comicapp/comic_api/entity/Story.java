@@ -1,6 +1,7 @@
 package com.comicapp.comic_api.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.Fetch;
 import lombok.Data;
 import lombok.ToString;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -34,10 +35,16 @@ public class Story {
     private Emotion emotion;
     // ----------------------------------------
 
-    // --- PHẦN CỦA BẠN (MUSIC) ---
-    @OneToMany(mappedBy = "story")
-    @ToString.Exclude
-    @JsonIgnore
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Chapter> chapters;
+
+    @OneToMany(mappedBy = "story" , cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Favorite> favorites;
+
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<StoryMusic> storyMusic;
 
     // Các list khác (Chapter, Comment...) nếu bên kia chưa viết xong
