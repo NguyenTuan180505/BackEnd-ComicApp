@@ -26,13 +26,16 @@
                     .csrf(csrf -> csrf.disable())
                     .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .authorizeHttpRequests(auth -> auth
-                                    .requestMatchers("/auth/login").permitAll()
-                                    .requestMatchers("/auth/register").permitAll()
 
+                            // ===== PUBLIC =====
                             .requestMatchers(
+                                    "/auth/login",
+                                    "/auth/register",
                                     "/images/**",
                                     "/public/**"
                             ).permitAll()
+
+                            // ===== USER + ADMIN (USER dùng, ADMIN kế thừa) =====
                             .requestMatchers(HttpMethod.GET,
                                     "/api/comments/**",
                                     "/api/tasks/**",
@@ -41,27 +44,38 @@
                                     "/api/favorites/**",
                                     "/api/emotions/**",
                                     "/api/music/**",
-                                    "/api/story-music/**"
-                            ).hasRole("USER")
+                                    "/api/story-music/**",
+                                    "/api/users/**"
+                            ).hasAnyRole("USER", "ADMIN")
+
                             .requestMatchers(HttpMethod.POST,
                                     "/api/comments/**",
                                     "/api/tasks/**",
                                     "/api/favorites/**"
-                            ).hasRole("USER")
+                            ).hasAnyRole("USER", "ADMIN")
+
                             .requestMatchers(HttpMethod.DELETE,
                                     "/api/comments/**",
                                     "/api/favorites/**"
-                            ).hasRole("USER")
+                            ).hasAnyRole("USER", "ADMIN")
+
+                            // ===== ADMIN ONLY (toàn quyền) =====
                             .requestMatchers(
-                                    "/api/comments/**",
-                                    "/api/tasks/**",
-                                    "/api/stories/**",
-                                    "/api/chapters/**",
-                                    "/api/favorites/**",
-                                    "/api/emotions/**",
-                                    "/api/music/**",
-                                    "/api/story-music/**"
+                                    HttpMethod.POST,
+                                    "/api/**"
                             ).hasRole("ADMIN")
+
+                            .requestMatchers(
+                                    HttpMethod.PUT,
+                                    "/api/**"
+                            ).hasRole("ADMIN")
+
+                            .requestMatchers(
+                                    HttpMethod.DELETE,
+                                    "/api/**"
+                            ).hasRole("ADMIN")
+
+                            // ===== CÒN LẠI =====
                             .anyRequest().authenticated()
                     )
                     .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

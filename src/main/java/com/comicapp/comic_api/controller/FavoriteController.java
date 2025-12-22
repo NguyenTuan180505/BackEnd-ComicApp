@@ -3,6 +3,7 @@ package com.comicapp.comic_api.controller;
 import com.comicapp.comic_api.dto.request.FavoriteCreateRequest;
 import com.comicapp.comic_api.dto.response.FavoriteResponse;
 import com.comicapp.comic_api.service.FavoriteService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/favorites")
+//@RequiredArgsConstructor
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
