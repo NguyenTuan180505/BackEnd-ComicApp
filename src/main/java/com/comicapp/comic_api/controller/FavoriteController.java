@@ -3,12 +3,12 @@ package com.comicapp.comic_api.controller;
 import com.comicapp.comic_api.dto.request.FavoriteCreateRequest;
 import com.comicapp.comic_api.dto.response.FavoriteResponse;
 import com.comicapp.comic_api.service.FavoriteService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/favorites")
 public class FavoriteController {
@@ -27,19 +27,18 @@ public class FavoriteController {
     }
 
     // 2️⃣ Lấy danh sách yêu thích theo user
-    @GetMapping("/me")
+    @GetMapping("me")
     public ResponseEntity<List<FavoriteResponse>> getFavoritesByUser(
-            @AuthenticationPrincipal String username) {
-        return ResponseEntity.ok(favoriteService.getFavoritesByUser(username));
+            @AuthenticationPrincipal String usename) {
+        return ResponseEntity.ok(favoriteService.getFavoritesByUser(usename));
     }
 
     // 3️⃣ Xoá truyện yêu thích
     @DeleteMapping
     public ResponseEntity<Void> removeFavorite(
-            @AuthenticationPrincipal  String username,
+            @AuthenticationPrincipal String usename,
             @RequestParam Long storyId) {
-        favoriteService.removeFavorite(username, storyId);
+        favoriteService.removeFavorite(usename, storyId);
         return ResponseEntity.noContent().build();
     }
 }
-

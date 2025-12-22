@@ -40,7 +40,8 @@
                                     "/public/**"
                             ).permitAll()
                             .requestMatchers(
-                                    "/comments/**"
+                                    "/comments/**",
+                                    "/api/tasks/**"
                             ).hasRole("USER")
                             .anyRequest().authenticated()
                     )

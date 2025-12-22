@@ -1,6 +1,7 @@
 package com.comicapp.comic_api.service;
 
 import com.comicapp.comic_api.dto.request.UserCreateRequest;
+import com.comicapp.comic_api.dto.response.UserPointsResponse;
 import com.comicapp.comic_api.dto.response.UserResponse;
 import com.comicapp.comic_api.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,4 +20,7 @@ public interface IUserService {
     void deleteUser(Long id);
 
     UserResponse getCurrentUser(String username);
+
+    UserPointsResponse getUserPoints(String user);
+
 }

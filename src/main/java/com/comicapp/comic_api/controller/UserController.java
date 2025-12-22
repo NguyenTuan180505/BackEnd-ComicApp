@@ -1,6 +1,7 @@
 package com.comicapp.comic_api.controller;
 
 import com.comicapp.comic_api.dto.request.UserCreateRequest;
+import com.comicapp.comic_api.dto.response.UserPointsResponse;
 import com.comicapp.comic_api.dto.response.UserResponse;
 import com.comicapp.comic_api.entity.User;
 import com.comicapp.comic_api.service.IUserService;
@@ -72,6 +73,11 @@ public class UserController {
         return ResponseEntity.ok(
                 userService.getCurrentUser(username)
         );
+    }
+
+    @GetMapping("/me/points")
+    public ResponseEntity<UserPointsResponse> getUserPoints(@AuthenticationPrincipal String username){
+        return ResponseEntity.ok(userService.getUserPoints(username));
     }
 
 
