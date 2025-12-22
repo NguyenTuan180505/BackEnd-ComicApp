@@ -1,6 +1,7 @@
 package com.comicapp.comic_api.service.impl;
 
 import com.comicapp.comic_api.dto.request.ChapterCreateRequest;
+import com.comicapp.comic_api.dto.response.ChapterDetailResponse;
 import com.comicapp.comic_api.dto.response.ChapterResponse;
 import com.comicapp.comic_api.entity.Chapter;
 import com.comicapp.comic_api.entity.Story;
@@ -37,15 +38,14 @@ public class ChapterServiceImpl implements ChapterService {
                 .map(chapterMapper::toResponse)
                 .collect(Collectors.toList());
     }
-
     @Override
-    public ChapterResponse getChapterById(Long id) {
+    public ChapterDetailResponse getChapterById(Long id) {
         Chapter chapter = chapterRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Không tìm thấy chương với ID: " + id
                 ));
-        return chapterMapper.toResponse(chapter);
+        return chapterMapper.toDetailResponse(chapter);
     }
 
     @Override

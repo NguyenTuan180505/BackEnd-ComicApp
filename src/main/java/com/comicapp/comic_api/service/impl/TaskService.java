@@ -50,7 +50,7 @@ public class TaskService implements ITaskService {
         List<Long> completedTaskIds = userTaskRepository.findByUserId(user.getId())
                 .stream()
                 .map(userTask -> userTask.getTask().getId())
-                .toList();
+                .collect(Collectors.toList());
 
         return taskRepository.findAll()
                 .stream()
