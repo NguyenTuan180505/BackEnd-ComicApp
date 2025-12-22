@@ -1,4 +1,4 @@
-package com.comicapp.comic_api.service;
+package com.comicapp.comic_api.service.impl;
 
 import com.comicapp.comic_api.dto.request.ChapterCreateRequest;
 import com.comicapp.comic_api.dto.response.ChapterResponse;
@@ -7,6 +7,7 @@ import com.comicapp.comic_api.entity.Story;
 import com.comicapp.comic_api.mapper.ChapterMapper;
 import com.comicapp.comic_api.repository.ChapterRepository;
 import com.comicapp.comic_api.repository.StoryRepository;
+import com.comicapp.comic_api.service.ChapterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

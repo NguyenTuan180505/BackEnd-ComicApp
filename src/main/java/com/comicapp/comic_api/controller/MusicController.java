@@ -2,7 +2,7 @@ package com.comicapp.comic_api.controller;
 
 import com.comicapp.comic_api.dto.request.MusicCreateRequest;
 import com.comicapp.comic_api.dto.response.MusicResponse;
-import com.comicapp.comic_api.service.MusicService;
+import com.comicapp.comic_api.service.impl.MusicService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

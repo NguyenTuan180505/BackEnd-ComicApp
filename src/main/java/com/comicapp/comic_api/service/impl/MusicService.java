@@ -1,4 +1,4 @@
-package com.comicapp.comic_api.service;
+package com.comicapp.comic_api.service.impl;
 
 import com.comicapp.comic_api.dto.request.MusicCreateRequest;
 import com.comicapp.comic_api.dto.response.MusicResponse;

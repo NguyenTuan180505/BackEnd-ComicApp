@@ -5,7 +5,7 @@ import com.comicapp.comic_api.dto.response.CommentResponse;
 
 import java.util.List;
 
-public interface CommentService {
+public interface ICommentService {
 
     List<CommentResponse> getCommentsByStory(Long storyId);
 

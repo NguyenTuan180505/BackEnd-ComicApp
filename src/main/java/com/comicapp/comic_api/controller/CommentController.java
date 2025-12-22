@@ -2,7 +2,7 @@ package com.comicapp.comic_api.controller;
 
 import com.comicapp.comic_api.dto.request.CommentCreateRequest;
 import com.comicapp.comic_api.dto.response.CommentResponse;
-import com.comicapp.comic_api.service.CommentService;
+import com.comicapp.comic_api.service.ICommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final CommentService commentService;
+    private final ICommentService commentService;
 
     // GET /comments?storyId=1
     @GetMapping

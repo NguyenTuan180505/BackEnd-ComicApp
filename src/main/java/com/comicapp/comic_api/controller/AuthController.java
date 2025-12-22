@@ -2,9 +2,8 @@ package com.comicapp.comic_api.controller;
 
 import com.comicapp.comic_api.dto.request.LoginRequest;
 import com.comicapp.comic_api.dto.request.UserCreateRequest;
-import com.comicapp.comic_api.dto.response.LoginResponse;
-import com.comicapp.comic_api.dto.response.UserResponse;
-import com.comicapp.comic_api.service.AuthService;
+import com.comicapp.comic_api.service.IAuthService;
+import com.comicapp.comic_api.service.impl.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+    private final IAuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {

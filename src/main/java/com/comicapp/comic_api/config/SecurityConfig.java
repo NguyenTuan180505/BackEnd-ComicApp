@@ -26,13 +26,16 @@
                     .csrf(csrf -> csrf.disable())
                     .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .authorizeHttpRequests(auth -> auth
-                            .requestMatchers("/auth/login").permitAll()
-                            .requestMatchers("/auth/register").permitAll()
+                                    .requestMatchers("/auth/login").permitAll()
+                                    .requestMatchers("/auth/register").permitAll()
+
+                            .requestMatchers(HttpMethod.GET,
+                                    "/stories/**",
+                                    "/chapters/**",
+                                    "/comments"
+                            ).permitAll()
 
                             .requestMatchers(
-                                    "/api/comics/**",
-                                    "/api/chapters/**",
-                                    "/uploads/**",
                                     "/images/**",
                                     "/public/**"
                             ).permitAll()

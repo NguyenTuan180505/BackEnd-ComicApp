@@ -8,7 +8,7 @@ import com.comicapp.comic_api.entity.User;
 import com.comicapp.comic_api.repository.CommentRepository;
 import com.comicapp.comic_api.repository.StoryRepository;
 import com.comicapp.comic_api.repository.UserRepository;
-import com.comicapp.comic_api.service.CommentService;
+import com.comicapp.comic_api.service.ICommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceImpl implements ICommentService {
 
     private final CommentRepository commentRepository;
     private final StoryRepository storyRepository;

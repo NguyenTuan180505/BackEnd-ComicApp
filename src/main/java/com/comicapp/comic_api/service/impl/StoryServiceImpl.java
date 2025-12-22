@@ -1,4 +1,4 @@
-package com.comicapp.comic_api.service;
+package com.comicapp.comic_api.service.impl;
 
 import com.comicapp.comic_api.dto.request.StoryCreateRequest;
 import com.comicapp.comic_api.dto.response.StoryResponse;
@@ -7,6 +7,7 @@ import com.comicapp.comic_api.entity.Story;
 import com.comicapp.comic_api.repository.EmotionRepository;
 import com.comicapp.comic_api.repository.StoryRepository;
 
+import com.comicapp.comic_api.service.StoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

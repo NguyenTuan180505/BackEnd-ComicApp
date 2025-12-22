@@ -1,7 +1,7 @@
 package com.comicapp.comic_api.controller;
 
 import com.comicapp.comic_api.dto.request.StoryMusicCreateRequest;
-import com.comicapp.comic_api.service.StoryMusicService;
+import com.comicapp.comic_api.service.impl.StoryMusicService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

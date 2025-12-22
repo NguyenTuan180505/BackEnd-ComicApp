@@ -1,4 +1,4 @@
-package com.comicapp.comic_api.service;
+package com.comicapp.comic_api.service.impl;
 
 import com.comicapp.comic_api.dto.request.StoryMusicCreateRequest;
 import com.comicapp.comic_api.dto.response.MusicResponse;
@@ -8,7 +8,6 @@ import com.comicapp.comic_api.entity.StoryMusic;
 import com.comicapp.comic_api.repository.MusicRepository;
 import com.comicapp.comic_api.repository.StoryMusicRepository;
 import com.comicapp.comic_api.repository.StoryRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
