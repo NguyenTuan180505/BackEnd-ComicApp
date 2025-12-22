@@ -1,9 +1,13 @@
 package com.comicapp.comic_api.service.impl;
 
 import com.comicapp.comic_api.dto.request.UserCreateRequest;
+import com.comicapp.comic_api.dto.response.UserPointsResponse;
 import com.comicapp.comic_api.dto.response.UserResponse;
 import com.comicapp.comic_api.entity.User;
+import com.comicapp.comic_api.entity.UserPoints;
 import com.comicapp.comic_api.mapper.UserMapper;
+import com.comicapp.comic_api.mapper.UserPointsMapper;
+import com.comicapp.comic_api.repository.UserPointsRepository;
 import com.comicapp.comic_api.repository.UserRepository;
 import com.comicapp.comic_api.service.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,8 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final UserPointsRepository userPointsRepository;
+    private final UserPointsMapper userPointsMapper;
 
     @Override
     public List<UserResponse> getAllUsers() {
@@ -70,5 +76,15 @@ public class UserService implements IUserService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User không tồn tại"));
         return userMapper.toResponse(user);
+    }
+
+    @Override
+    public UserPointsResponse getUserPoints(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+        UserPoints userPoints = userPointsRepository.findByUserId(user.getId())
+                .orElseThrow(()-> new RuntimeException("User không tồn tại "));
+
+        return userPointsMapper.toResponse(userPoints);
     }
 }
