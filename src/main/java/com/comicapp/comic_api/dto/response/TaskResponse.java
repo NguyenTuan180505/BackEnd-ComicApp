@@ -8,4 +8,5 @@ public class TaskResponse {
     private String name;
     private String description;
     private Integer pointsReward;
+    private boolean completed;
 }

@@ -9,7 +9,6 @@ public class ChapterResponse {
     private Long id;
     private Long storyId;
     private String title;
-    private String content;
     private Integer chapterNumber;
     private Boolean isLocked;
     private LocalDateTime createdAt;
