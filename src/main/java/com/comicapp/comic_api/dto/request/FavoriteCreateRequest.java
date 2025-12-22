@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class FavoriteCreateRequest {
-    private Long userId;
     private Long storyId;
 }
 

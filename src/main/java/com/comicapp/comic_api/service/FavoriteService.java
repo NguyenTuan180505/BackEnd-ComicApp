@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface FavoriteService {
 
-    FavoriteResponse addFavorite(FavoriteCreateRequest request);
+    FavoriteResponse addFavorite(FavoriteCreateRequest request, String username);
 
     List<FavoriteResponse> getFavoritesByUser(String username);
 

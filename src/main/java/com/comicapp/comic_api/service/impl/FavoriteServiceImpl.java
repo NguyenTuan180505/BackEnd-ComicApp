@@ -31,16 +31,15 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public FavoriteResponse addFavorite(FavoriteCreateRequest request) {
-
+    public FavoriteResponse addFavorite(FavoriteCreateRequest request, String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
         // ✅ Check đã tồn tại
         if (favoriteRepository.existsByUser_IdAndStory_Id(
-                request.getUserId(), request.getStoryId())) {
+                user.getId(), request.getStoryId())) {
             throw new RuntimeException("Story already in favorites");
         }
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
         Story story = storyRepository.findById(request.getStoryId())
                 .orElseThrow(() -> new RuntimeException("Story not found"));

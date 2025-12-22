@@ -34,7 +34,6 @@
                                     "/chapters/**",
                                     "/comments"
                             ).permitAll()
-
                             .requestMatchers(
                                     "/images/**",
                                     "/public/**"

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/favorites")
+@RequestMapping("/api/favorites")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
@@ -22,23 +22,24 @@ public class FavoriteController {
     // 1️⃣ Thêm truyện yêu thích
     @PostMapping
     public ResponseEntity<FavoriteResponse> addFavorite(
-            @RequestBody FavoriteCreateRequest request) {
-        return ResponseEntity.ok(favoriteService.addFavorite(request));
+            @RequestBody FavoriteCreateRequest request,
+            @AuthenticationPrincipal String username) {
+        return ResponseEntity.ok(favoriteService.addFavorite(request, username));
     }
 
     // 2️⃣ Lấy danh sách yêu thích theo user
-    @GetMapping("me")
+    @GetMapping("/me")
     public ResponseEntity<List<FavoriteResponse>> getFavoritesByUser(
-            @AuthenticationPrincipal String usename) {
-        return ResponseEntity.ok(favoriteService.getFavoritesByUser(usename));
+            @AuthenticationPrincipal String username) {
+        return ResponseEntity.ok(favoriteService.getFavoritesByUser(username));
     }
 
     // 3️⃣ Xoá truyện yêu thích
-    @DeleteMapping
+    @DeleteMapping("/{storyId}")
     public ResponseEntity<Void> removeFavorite(
-            @AuthenticationPrincipal String usename,
-            @RequestParam Long storyId) {
-        favoriteService.removeFavorite(usename, storyId);
+            @AuthenticationPrincipal String username,
+            @PathVariable Long storyId) {
+        favoriteService.removeFavorite(username, storyId);
         return ResponseEntity.noContent().build();
     }
 }

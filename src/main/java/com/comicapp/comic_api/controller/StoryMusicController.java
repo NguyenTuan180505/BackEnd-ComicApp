@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/story-music")
+@RequestMapping("/api/story-music")
 public class StoryMusicController {
 
     private final StoryMusicService storyMusicService;
