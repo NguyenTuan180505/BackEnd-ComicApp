@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface ChapterService {
     List<ChapterResponse> getAllChapters();
-//    ChapterDetailResponse getChapterDetail(Long id);
     List<ChapterResponse> getChaptersByStoryId(Long storyId);
     ChapterDetailResponse getChapterById(Long id);
     ChapterResponse createChapter(ChapterCreateRequest request);
