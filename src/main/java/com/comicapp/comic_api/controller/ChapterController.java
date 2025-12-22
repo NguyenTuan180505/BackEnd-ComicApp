@@ -1,5 +1,6 @@
 package com.comicapp.comic_api.controller;
 import com.comicapp.comic_api.dto.request.ChapterCreateRequest;
+import com.comicapp.comic_api.dto.response.ChapterDetailResponse;
 import com.comicapp.comic_api.dto.response.ChapterResponse;
 import com.comicapp.comic_api.service.ChapterService;
 import jakarta.validation.Valid;
@@ -24,7 +25,7 @@ public class ChapterController {
     }
     // Lấy chi tiết chương theo ID
     @GetMapping("/{id}")
-    public ResponseEntity<ChapterResponse> getChapterById(@PathVariable Long id) {
+    public ResponseEntity<ChapterDetailResponse> getChapterById(@PathVariable Long id) {
         return ResponseEntity.ok(chapterService.getChapterById(id));
     }
     // Tạo mới chương
