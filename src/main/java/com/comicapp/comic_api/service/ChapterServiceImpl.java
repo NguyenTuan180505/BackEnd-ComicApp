@@ -37,15 +37,6 @@ public class ChapterServiceImpl implements ChapterService {
                 .map(chapterMapper::toResponse)
                 .collect(Collectors.toList());
     }
-//    public ChapterDetailResponse getChapterDetail(Long id) {
-//        Chapter chapter = chapterRepository.findById(id)
-//                .orElseThrow(() -> new ResponseStatusException(
-//                        HttpStatus.NOT_FOUND,
-//                        "Không tìm thấy chương"
-//                ));
-//        return chapterMapper.toDetailResponse(chapter);
-//    }
-
     @Override
     public ChapterDetailResponse getChapterById(Long id) {
         Chapter chapter = chapterRepository.findById(id)
