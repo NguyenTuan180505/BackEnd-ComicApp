@@ -9,7 +9,7 @@ public interface ICommentService {
 
     List<CommentResponse> getCommentsByStory(Long storyId);
 
-    CommentResponse createComment(CommentCreateRequest request);
+    CommentResponse createComment(CommentCreateRequest request, String username);
 
     void deleteComment(Long commentId);
 }

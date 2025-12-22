@@ -29,19 +29,39 @@
                                     .requestMatchers("/auth/login").permitAll()
                                     .requestMatchers("/auth/register").permitAll()
 
-                            .requestMatchers(HttpMethod.GET,
-                                    "/stories/**",
-                                    "/chapters/**",
-                                    "/comments"
-                            ).permitAll()
                             .requestMatchers(
                                     "/images/**",
                                     "/public/**"
                             ).permitAll()
-                            .requestMatchers(
-                                    "/comments/**",
-                                    "/api/tasks/**"
+                            .requestMatchers(HttpMethod.GET,
+                                    "/api/comments/**",
+                                    "/api/tasks/**",
+                                    "/api/stories/**",
+                                    "/api/chapters/**",
+                                    "/api/favorites/**",
+                                    "/api/emotions/**",
+                                    "/api/music/**",
+                                    "/api/story-music/**"
                             ).hasRole("USER")
+                            .requestMatchers(HttpMethod.POST,
+                                    "/api/comments/**",
+                                    "/api/tasks/**",
+                                    "/api/favorites/**"
+                            ).hasRole("USER")
+                            .requestMatchers(HttpMethod.DELETE,
+                                    "/api/comments/**",
+                                    "/api/favorites/**"
+                            ).hasRole("USER")
+                            .requestMatchers(
+                                    "/api/comments/**",
+                                    "/api/tasks/**",
+                                    "/api/stories/**",
+                                    "/api/chapters/**",
+                                    "/api/favorites/**",
+                                    "/api/emotions/**",
+                                    "/api/music/**",
+                                    "/api/story-music/**"
+                            ).hasRole("ADMIN")
                             .anyRequest().authenticated()
                     )
                     .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
