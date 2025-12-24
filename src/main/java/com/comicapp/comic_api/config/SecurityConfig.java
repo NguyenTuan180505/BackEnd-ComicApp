@@ -1,90 +1,111 @@
-    package com.comicapp.comic_api.config;
+package com.comicapp.comic_api.config;
 
-    import com.comicapp.comic_api.entity.Role;
-    import com.comicapp.comic_api.filter.JwtAuthFilter;
-    import lombok.RequiredArgsConstructor;
-    import org.springframework.context.annotation.Bean;
-    import org.springframework.context.annotation.Configuration;
-    import org.springframework.http.HttpMethod;
-    import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-    import org.springframework.security.config.http.SessionCreationPolicy;
-    import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-    import org.springframework.security.crypto.password.PasswordEncoder;
-    import org.springframework.security.web.SecurityFilterChain;
-    import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.comicapp.comic_api.filter.JwtAuthFilter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-    @Configuration
-    @RequiredArgsConstructor
-    public class SecurityConfig {
+import java.util.List;
 
-        private final JwtAuthFilter jwtAuthFilter;
+@Configuration
+@RequiredArgsConstructor
+public class SecurityConfig {
 
-        @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    private final JwtAuthFilter jwtAuthFilter;
 
-            http
-                    .csrf(csrf -> csrf.disable())
-                    .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .authorizeHttpRequests(auth -> auth
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-                            // ===== PUBLIC =====
-                            .requestMatchers(
-                                    "/auth/login",
-                                    "/auth/register",
-                                    "/images/**",
-                                    "/public/**"
-                            ).permitAll()
+        http
+                // BẬT CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-                            // ===== USER + ADMIN (USER dùng, ADMIN kế thừa) =====
-                            .requestMatchers(HttpMethod.GET,
-                                    "/api/comments/**",
-                                    "/api/tasks/**",
-                                    "/api/stories/**",
-                                    "/api/chapters/**",
-                                    "/api/favorites/**",
-                                    "/api/emotions/**",
-                                    "/api/music/**",
-                                    "/api/story-music/**",
-                                    "/api/users/**"
-                            ).hasAnyRole("USER", "ADMIN")
+                // TẮT CSRF (vì API dùng JWT)
+                .csrf(csrf -> csrf.disable())
 
-                            .requestMatchers(HttpMethod.POST,
-                                    "/api/comments/**",
-                                    "/api/tasks/**",
-                                    "/api/favorites/**"
-                            ).hasAnyRole("USER", "ADMIN")
+                .sessionManagement(sm ->
+                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
 
-                            .requestMatchers(HttpMethod.DELETE,
-                                    "/api/comments/**",
-                                    "/api/favorites/**"
-                            ).hasAnyRole("USER", "ADMIN")
+                .authorizeHttpRequests(auth -> auth
 
-                            // ===== ADMIN ONLY (toàn quyền) =====
-                            .requestMatchers(
-                                    HttpMethod.POST,
-                                    "/api/**"
-                            ).hasRole("ADMIN")
+                        // ===== PUBLIC =====
+                        .requestMatchers(
+                                "/auth/login",
+                                "/auth/register",
+                                "/images/**",
+                                "/public/**"
+                        ).permitAll()
 
-                            .requestMatchers(
-                                    HttpMethod.PUT,
-                                    "/api/**"
-                            ).hasRole("ADMIN")
+                        // ===== USER + ADMIN =====
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/comments/**",
+                                "/api/tasks/**",
+                                "/api/stories/**",
+                                "/api/chapters/**",
+                                "/api/favorites/**",
+                                "/api/emotions/**",
+                                "/api/music/**",
+                                "/api/story-music/**",
+                                "/api/users/**"
+                        ).hasAnyRole("USER", "ADMIN")
 
-                            .requestMatchers(
-                                    HttpMethod.DELETE,
-                                    "/api/**"
-                            ).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/comments/**",
+                                "/api/tasks/**",
+                                "/api/favorites/**"
+                        ).hasAnyRole("USER", "ADMIN")
 
-                            // ===== CÒN LẠI =====
-                            .anyRequest().authenticated()
-                    )
-                    .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/api/comments/**",
+                                "/api/favorites/**"
+                        ).hasAnyRole("USER", "ADMIN")
 
-            return http.build();
-        }
+                        // ===== ADMIN ONLY =====
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
 
-        @Bean
-        public PasswordEncoder passwordEncoder() {
-            return new BCryptPasswordEncoder();
-        }
+                        // ===== CÒN LẠI =====
+                        .anyRequest().authenticated()
+                )
+
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
+
+    // CẤU HÌNH CORS
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowCredentials(true);
+
+        // 🔥 CHO PHÉP TẤT CẢ — tạm dùng khi dev (sau nên giới hạn domain)
+        config.setAllowedOriginPatterns(List.of("*"));
+
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}

@@ -71,6 +71,13 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .ifPresent(favoriteRepository::delete);
     }
 
+    @Override
+    public Boolean isFavorite(String username, Long storyId) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+        return favoriteRepository.existsByUser_IdAndStory_Id(user.getId(), storyId);
+    }
+
     private FavoriteResponse mapToResponse(Favorite favorite) {
         FavoriteResponse res = new FavoriteResponse();
         res.setId(favorite.getId());

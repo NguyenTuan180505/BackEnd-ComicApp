@@ -35,6 +35,11 @@ public class FavoriteController {
             @AuthenticationPrincipal String username) {
         return ResponseEntity.ok(favoriteService.getFavoritesByUser(username));
     }
+    @GetMapping("/check")
+    public ResponseEntity<Boolean> isFavorite(@AuthenticationPrincipal String username,
+                                              @RequestParam Long storyId){
+        return ResponseEntity.ok(favoriteService.isFavorite(username, storyId));
+    }
 
     // 3️⃣ Xoá truyện yêu thích
     @DeleteMapping("/{storyId}")

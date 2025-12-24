@@ -12,4 +12,6 @@ public interface FavoriteService {
     List<FavoriteResponse> getFavoritesByUser(String username);
 
     void removeFavorite(String username, Long storyId);
+
+    Boolean isFavorite(String username, Long storyId);
 }
