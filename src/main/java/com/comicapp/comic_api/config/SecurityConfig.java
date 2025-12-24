@@ -63,7 +63,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,
                                 "/api/comments/**",
                                 "/api/tasks/**",
-                                "/api/favorites/**"
+                                "/api/favorites/**",
+                                "/api/users/change-password"
                         ).hasAnyRole("USER", "ADMIN")
 
                         .requestMatchers(HttpMethod.DELETE,

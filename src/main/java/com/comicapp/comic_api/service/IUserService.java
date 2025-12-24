@@ -1,5 +1,6 @@
 package com.comicapp.comic_api.service;
 
+import com.comicapp.comic_api.dto.request.UserChangePasswordRequest;
 import com.comicapp.comic_api.dto.request.UserCreateRequest;
 import com.comicapp.comic_api.dto.response.UserPointsResponse;
 import com.comicapp.comic_api.dto.response.UserResponse;
@@ -22,5 +23,7 @@ public interface IUserService {
     UserResponse getCurrentUser(String username);
 
     UserPointsResponse getUserPoints(String user);
+    UserResponse changePassword(String username, UserChangePasswordRequest request);
+
 
 }
