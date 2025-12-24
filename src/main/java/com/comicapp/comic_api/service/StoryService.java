@@ -12,6 +12,7 @@ public interface StoryService {
 
     StoryResponse getStoryById(Long id);
 
+
     StoryResponse createStory(StoryCreateRequest request);
 
     StoryResponse updateStory(Long id, StoryCreateRequest request);
