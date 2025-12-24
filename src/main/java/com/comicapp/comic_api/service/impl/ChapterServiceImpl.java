@@ -70,21 +70,36 @@ public class ChapterServiceImpl implements ChapterService {
                         "Không tìm thấy chương với ID: " + id
                 ));
 
-        Story story = storyRepository.findById(request.getStoryId())
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Không tìm thấy truyện với ID: " + request.getStoryId()
-                ));
+        // Chỉ update story khi có storyId
+        if (request.getStoryId() != null) {
+            Story story = storyRepository.findById(request.getStoryId())
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND,
+                            "Không tìm thấy truyện với ID: " + request.getStoryId()
+                    ));
+            existingChapter.setStory(story);
+        }
 
-        existingChapter.setTitle(request.getTitle());
-        existingChapter.setContent(request.getContent());
-        existingChapter.setChapterNumber(request.getChapterNumber());
-        existingChapter.setIsLocked(request.getIsLocked());
-        existingChapter.setStory(story);
+        if (request.getTitle() != null) {
+            existingChapter.setTitle(request.getTitle());
+        }
+
+        if (request.getContent() != null) {
+            existingChapter.setContent(request.getContent());
+        }
+
+        if (request.getChapterNumber() != null) {
+            existingChapter.setChapterNumber(request.getChapterNumber());
+        }
+
+        if (request.getIsLocked() != null) {
+            existingChapter.setIsLocked(request.getIsLocked());
+        }
 
         Chapter updatedChapter = chapterRepository.save(existingChapter);
         return chapterMapper.toResponse(updatedChapter);
     }
+
 
     @Override
     public void deleteChapter(Long id) {

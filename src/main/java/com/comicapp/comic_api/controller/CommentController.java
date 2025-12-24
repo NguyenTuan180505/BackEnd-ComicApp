@@ -4,12 +4,13 @@ import com.comicapp.comic_api.dto.request.CommentCreateRequest;
 import com.comicapp.comic_api.dto.response.CommentResponse;
 import com.comicapp.comic_api.service.ICommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/api/comments")
 @RequiredArgsConstructor
 public class CommentController {
 
@@ -25,8 +26,9 @@ public class CommentController {
     // POST /comments
     @PostMapping
     public CommentResponse createComment(
+            @AuthenticationPrincipal String username,
             @RequestBody CommentCreateRequest request) {
-        return commentService.createComment(request);
+        return commentService.createComment(request, username);
     }
 
     // DELETE /comments/{id}

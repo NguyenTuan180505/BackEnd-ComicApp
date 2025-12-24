@@ -33,13 +33,11 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     @Override
-    public CommentResponse createComment(CommentCreateRequest request) {
-
+    public CommentResponse createComment(CommentCreateRequest request, String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
         Story story = storyRepository.findById(request.getStoryId())
                 .orElseThrow(() -> new RuntimeException("Story not found"));
-
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
         Comment comment = new Comment();
         comment.setStory(story);

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/stories")
+@RequestMapping("/api/stories")
 @RequiredArgsConstructor
 public class StoryController {
 
@@ -51,4 +51,10 @@ public class StoryController {
         storyService.deleteStory(id);
         return "Story deleted successfully";
     }
+
+    @GetMapping("/search")
+    public List<StoryResponse> searchStories(@RequestParam String title) {
+        return storyService.searchStoriesByTitle(title);
+    }
+
 }

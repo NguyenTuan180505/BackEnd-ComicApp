@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 public interface StoryRepository extends JpaRepository<Story, Long> {
     List<Story> findByEmotionId(Long emotionId);
+    List<Story> findByTitleContainingIgnoreCase(String title);
+
 }
 

@@ -1,57 +1,111 @@
-    package com.comicapp.comic_api.config;
+package com.comicapp.comic_api.config;
 
-    import com.comicapp.comic_api.entity.Role;
-    import com.comicapp.comic_api.filter.JwtAuthFilter;
-    import lombok.RequiredArgsConstructor;
-    import org.springframework.context.annotation.Bean;
-    import org.springframework.context.annotation.Configuration;
-    import org.springframework.http.HttpMethod;
-    import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-    import org.springframework.security.config.http.SessionCreationPolicy;
-    import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-    import org.springframework.security.crypto.password.PasswordEncoder;
-    import org.springframework.security.web.SecurityFilterChain;
-    import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.comicapp.comic_api.filter.JwtAuthFilter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-    @Configuration
-    @RequiredArgsConstructor
-    public class SecurityConfig {
+import java.util.List;
 
-        private final JwtAuthFilter jwtAuthFilter;
+@Configuration
+@RequiredArgsConstructor
+public class SecurityConfig {
 
-        @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    private final JwtAuthFilter jwtAuthFilter;
 
-            http
-                    .csrf(csrf -> csrf.disable())
-                    .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .authorizeHttpRequests(auth -> auth
-                                    .requestMatchers("/auth/login").permitAll()
-                                    .requestMatchers("/auth/register").permitAll()
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-                            .requestMatchers(HttpMethod.GET,
-                                    "/stories/**",
-                                    "/chapters/**",
-                                    "/comments"
-                            ).permitAll()
+        http
+                // BẬT CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-                            .requestMatchers(
-                                    "/images/**",
-                                    "/public/**"
-                            ).permitAll()
-                            .requestMatchers(
-                                    "/comments/**",
-                                    "/api/tasks/**"
-                            ).hasRole("USER")
-                            .anyRequest().authenticated()
-                    )
-                    .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                // TẮT CSRF (vì API dùng JWT)
+                .csrf(csrf -> csrf.disable())
 
-            return http.build();
-        }
+                .sessionManagement(sm ->
+                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
 
-        @Bean
-        public PasswordEncoder passwordEncoder() {
-            return new BCryptPasswordEncoder();
-        }
+                .authorizeHttpRequests(auth -> auth
+
+                        // ===== PUBLIC =====
+                        .requestMatchers(
+                                "/auth/login",
+                                "/auth/register",
+                                "/api/images/**",
+                                "/api/public/**"
+                        ).permitAll()
+
+                        // ===== USER + ADMIN =====
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/comments/**",
+                                "/api/tasks/**",
+                                "/api/stories/**",
+                                "/api/chapters/**",
+                                "/api/favorites/**",
+                                "/api/emotions/**",
+                                "/api/music/**",
+                                "/api/story-music/**",
+                                "/api/users/**"
+                        ).hasAnyRole("USER", "ADMIN")
+
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/comments/**",
+                                "/api/tasks/**",
+                                "/api/favorites/**"
+                        ).hasAnyRole("USER", "ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/api/comments/**",
+                                "/api/favorites/**"
+                        ).hasAnyRole("USER", "ADMIN")
+
+                        // ===== ADMIN ONLY =====
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+
+                        // ===== CÒN LẠI =====
+                        .anyRequest().authenticated()
+                )
+
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
+
+    // CẤU HÌNH CORS
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowCredentials(true);
+
+        // 🔥 CHO PHÉP TẤT CẢ — tạm dùng khi dev (sau nên giới hạn domain)
+        config.setAllowedOriginPatterns(List.of("*"));
+
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}

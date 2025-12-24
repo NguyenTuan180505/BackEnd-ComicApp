@@ -31,16 +31,15 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public FavoriteResponse addFavorite(FavoriteCreateRequest request) {
-
+    public FavoriteResponse addFavorite(FavoriteCreateRequest request, String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
         // ✅ Check đã tồn tại
         if (favoriteRepository.existsByUser_IdAndStory_Id(
-                request.getUserId(), request.getStoryId())) {
+                user.getId(), request.getStoryId())) {
             throw new RuntimeException("Story already in favorites");
         }
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
         Story story = storyRepository.findById(request.getStoryId())
                 .orElseThrow(() -> new RuntimeException("Story not found"));
@@ -70,6 +69,13 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .orElseThrow(() -> new RuntimeException("User không tồn tại"));
         favoriteRepository.findByUser_IdAndStory_Id(user.getId(), storyId)
                 .ifPresent(favoriteRepository::delete);
+    }
+
+    @Override
+    public Boolean isFavorite(String username, Long storyId) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+        return favoriteRepository.existsByUser_IdAndStory_Id(user.getId(), storyId);
     }
 
     private FavoriteResponse mapToResponse(Favorite favorite) {

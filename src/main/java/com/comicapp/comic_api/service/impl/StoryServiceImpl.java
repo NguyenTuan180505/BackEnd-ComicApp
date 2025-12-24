@@ -81,23 +81,52 @@ public class StoryServiceImpl implements StoryService {
         Story story = storyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Story not found"));
 
-        Emotion emotion = emotionRepository.findById(req.getEmotionId())
-                .orElseThrow(() -> new RuntimeException("Emotion not found"));
+        // Chỉ update emotion khi có emotionId
+        if (req.getEmotionId() != null) {
+            Emotion emotion = emotionRepository.findById(req.getEmotionId())
+                    .orElseThrow(() -> new RuntimeException("Emotion not found"));
+            story.setEmotion(emotion);
+        }
 
-        story.setTitle(req.getTitle());
-        story.setAuthor(req.getAuthor());
-        story.setDescription(req.getDescription());
-        story.setCoverImage(req.getCoverImage());
-        story.setEmotion(emotion);
+        if (req.getTitle() != null) {
+            story.setTitle(req.getTitle());
+        }
+
+        if (req.getAuthor() != null) {
+            story.setAuthor(req.getAuthor());
+        }
+
+        if (req.getDescription() != null) {
+            story.setDescription(req.getDescription());
+        }
+
+        if (req.getCoverImage() != null) {
+            story.setCoverImage(req.getCoverImage());
+        }
 
         Story updated = storyRepository.save(story);
         return toResponse(updated);
     }
 
+
     @Override
     public void deleteStory(Long id) {
         storyRepository.deleteById(id);
     }
+
+    @Override
+    public List<StoryResponse> searchStoriesByTitle(String title) {
+
+        List<Story> stories = storyRepository.findByTitleContainingIgnoreCase(title);
+
+        List<StoryResponse> result = new ArrayList<>();
+        for (Story s : stories) {
+            result.add(toResponse(s));
+        }
+
+        return result;
+    }
+
 
     private StoryResponse toResponse(Story story) {
 
