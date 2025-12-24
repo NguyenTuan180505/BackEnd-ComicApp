@@ -114,4 +114,24 @@ public class TaskService implements ITaskService {
         return taskMapper.toTaskResponse(taskRepository.save(task));
     }
 
+    @Override
+    public TaskResponse updateTask(Long id, TaskCreateRequest request) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task không tồn tại"));
+
+        task.setName(request.getName());
+        task.setDescription(request.getDescription());
+        task.setPointsReward(request.getPointsReward());
+
+        return taskMapper.toTaskResponse(taskRepository.save(task));
+    }
+
+    @Override
+    public void deleteTask(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task không tồn tại"));
+        task.setActive(false);
+        taskRepository.save(task);
+    }
+
 }

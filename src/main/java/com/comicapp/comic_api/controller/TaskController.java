@@ -42,6 +42,19 @@ public class TaskController {
         return "Hoàn thành nhiệm vụ thành công";
     }
 
+    @PutMapping("/{id}")
+    public TaskResponse updateTask(
+            @PathVariable Long id,
+            @RequestBody TaskCreateRequest request) {
+        return taskService.updateTask(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return "Xóa nhiệm vụ thành công";
+    }
+
     // =========================
     // ADMIN TẠO TASK
     // =========================

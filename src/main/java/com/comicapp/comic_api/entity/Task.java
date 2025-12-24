@@ -15,12 +15,18 @@ public class Task {
     private Long id;
 
     private String name;
-
     private String description;
 
     @Column(name = "points_reward")
     private Integer pointsReward = 10;
 
+    // NEW
+    private boolean active = true;
+
+    // NEW
+    private Integer refreshLimit;
+
     @OneToMany(mappedBy = "task")
     private List<UserTask> userTasks;
 }
+
