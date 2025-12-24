@@ -100,6 +100,33 @@ public class TaskService implements ITaskService {
         userPoints.setPoints(userPoints.getPoints() + task.getPointsReward());
         userPointsRepository.save(userPoints);
     }
+    // =========================
+// ADMIN SỬA TASK
+// =========================
+    // =========================
+// ADMIN SỬA TASK
+// =========================
+    @Override
+    public TaskResponse updateTask(Long taskId, TaskCreateRequest request) {
+
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task không tồn tại"));
+
+        if (request.getName() != null) {
+            task.setName(request.getName());
+        }
+
+        if (request.getDescription() != null) {
+            task.setDescription(request.getDescription());
+        }
+
+        if (request.getPointsReward() != null) {
+            task.setPointsReward(request.getPointsReward());
+        }
+
+        return taskMapper.toTaskResponse(taskRepository.save(task));
+    }
+
 
     // =========================
     // ADMIN TẠO TASK

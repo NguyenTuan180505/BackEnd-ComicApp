@@ -11,6 +11,7 @@ public interface ITaskService {
     List<TaskResponse> getMyTasks(String username);
 
     void completeTask(String username, Long taskId);
+    TaskResponse updateTask(Long taskId, TaskCreateRequest request);
 
     TaskResponse createTask(TaskCreateRequest request);
 }

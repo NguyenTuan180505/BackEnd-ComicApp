@@ -42,6 +42,16 @@ public class TaskController {
         return "Hoàn thành nhiệm vụ thành công";
     }
 
+// ADMIN SỬA TASK
+// =========================
+    @PutMapping("/{taskId}")
+    public TaskResponse updateTask(
+            @PathVariable Long taskId,
+            @RequestBody TaskCreateRequest request
+    ) {
+        return taskService.updateTask(taskId, request);
+    }
+
     // =========================
     // ADMIN TẠO TASK
     // =========================
