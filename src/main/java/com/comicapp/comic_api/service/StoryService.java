@@ -17,4 +17,6 @@ public interface StoryService {
     StoryResponse updateStory(Long id, StoryCreateRequest request);
 
     void deleteStory(Long id);
+    List<StoryResponse> searchStoriesByTitle(String title);
+
 }

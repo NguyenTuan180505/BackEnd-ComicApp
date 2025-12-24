@@ -114,6 +114,20 @@ public class StoryServiceImpl implements StoryService {
         storyRepository.deleteById(id);
     }
 
+    @Override
+    public List<StoryResponse> searchStoriesByTitle(String title) {
+
+        List<Story> stories = storyRepository.findByTitleContainingIgnoreCase(title);
+
+        List<StoryResponse> result = new ArrayList<>();
+        for (Story s : stories) {
+            result.add(toResponse(s));
+        }
+
+        return result;
+    }
+
+
     private StoryResponse toResponse(Story story) {
 
         StoryResponse res = new StoryResponse();
