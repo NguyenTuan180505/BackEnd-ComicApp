@@ -77,6 +77,8 @@
                                     HttpMethod.DELETE,
                                     "/api/**"
                             ).hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
+
 
                             // ===== CÒN LẠI =====
                             .anyRequest().authenticated()
