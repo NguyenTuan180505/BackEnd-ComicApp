@@ -43,8 +43,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/auth/login",
                                 "/auth/register",
-                                "/images/**",
-                                "/public/**"
+                                "/api/images/**",
+                                "/api/public/**"
                         ).permitAll()
 
                         // ===== USER + ADMIN =====
