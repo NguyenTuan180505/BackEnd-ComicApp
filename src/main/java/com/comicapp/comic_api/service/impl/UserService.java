@@ -1,5 +1,6 @@
 package com.comicapp.comic_api.service.impl;
 
+import com.comicapp.comic_api.dto.request.UserChangePasswordRequest;
 import com.comicapp.comic_api.dto.request.UserCreateRequest;
 import com.comicapp.comic_api.dto.response.UserPointsResponse;
 import com.comicapp.comic_api.dto.response.UserResponse;
@@ -92,4 +93,24 @@ public class UserService implements IUserService {
 
         return userPointsMapper.toResponse(userPoints);
     }
+
+    @Override
+    public UserResponse changePassword(String username, UserChangePasswordRequest request) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+
+        // 1️⃣ Kiểm tra mật khẩu cũ
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new RuntimeException("Mật khẩu cũ không đúng");
+        }
+
+        // 2️⃣ Encode mật khẩu mới
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
+        userRepository.save(user);
+
+        return userMapper.toResponse(user);
+    }
+
 }

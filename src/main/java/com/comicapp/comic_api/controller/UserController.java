@@ -1,5 +1,6 @@
 package com.comicapp.comic_api.controller;
 
+import com.comicapp.comic_api.dto.request.UserChangePasswordRequest;
 import com.comicapp.comic_api.dto.request.UserCreateRequest;
 import com.comicapp.comic_api.dto.response.UserPointsResponse;
 import com.comicapp.comic_api.dto.response.UserResponse;
@@ -78,6 +79,16 @@ public class UserController {
     @GetMapping("/me/points")
     public ResponseEntity<UserPointsResponse> getUserPoints(@AuthenticationPrincipal String username){
         return ResponseEntity.ok(userService.getUserPoints(username));
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<UserResponse> changePassword(
+            @AuthenticationPrincipal String username,
+            @RequestBody UserChangePasswordRequest request
+    ) {
+        return ResponseEntity.ok(
+                userService.changePassword(username, request)
+        );
     }
 
 
