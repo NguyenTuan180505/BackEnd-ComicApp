@@ -24,7 +24,7 @@ public class ChapterUnlockService implements IChapterUnlockService{
     private final UnlockedChapterRepository unlockedRepo;
     private final UserRepository userRepository;
 
-    private static final int COST = 20; // chi phí mở khóa
+    private static final int COST =30; // chi phí mở khóa
 
     @Override
     @Transactional

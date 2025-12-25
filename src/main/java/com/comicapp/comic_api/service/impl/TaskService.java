@@ -12,8 +12,11 @@ import com.comicapp.comic_api.repository.UserPointsRepository;
 import com.comicapp.comic_api.repository.UserRepository;
 import com.comicapp.comic_api.repository.UserTaskRepository;
 import com.comicapp.comic_api.service.ITaskService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,39 +70,47 @@ public class TaskService implements ITaskService {
     // =========================
     // HOÀN THÀNH TASK
     // =========================
+
     @Override
+    @Transactional
     public void completeTask(String username, Long taskId) {
 
+        // 1️⃣ Lấy user
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User không tồn tại"));
-        // 1️⃣ Check task tồn tại
+
+        // 2️⃣ Lấy task
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task không tồn tại"));
 
-        // 2️⃣ Check đã làm chưa
+        // 3️⃣ Check đã làm chưa
         if (userTaskRepository.existsByUserIdAndTaskId(user.getId(), taskId)) {
-            throw new RuntimeException("Bạn đã hoàn thành nhiệm vụ này rồi");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Bạn đã hoàn thành nhiệm vụ này rồi"
+            );
         }
 
-
-        // 3️⃣ Lưu UserTask
+        // 4️⃣ Lưu UserTask
         UserTask userTask = new UserTask();
         userTask.setUser(user);
         userTask.setTask(task);
         userTaskRepository.save(userTask);
 
-        // 4️⃣ Cộng điểm
+        // 5️⃣ Cộng điểm (khởi tạo 0 nếu chưa có)
         UserPoints userPoints = userPointsRepository.findByUserId(user.getId())
                 .orElseGet(() -> {
                     UserPoints up = new UserPoints();
                     up.setUser(user);
-                    up.setPoints(up.getPoints()+task.getPointsReward());
+                    up.setPoints(0);
                     return up;
                 });
 
         userPoints.setPoints(userPoints.getPoints() + task.getPointsReward());
+
         userPointsRepository.save(userPoints);
     }
+
 
     // =========================
     // ADMIN TẠO TASK
@@ -110,6 +121,25 @@ public class TaskService implements ITaskService {
         task.setName(request.getName());
         task.setDescription(request.getDescription());
         task.setPointsReward(request.getPointsReward());
+
+        return taskMapper.toTaskResponse(taskRepository.save(task));
+    }
+    public TaskResponse updateTask(Long taskId, TaskCreateRequest request) {
+
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task không tồn tại"));
+
+        if (request.getName() != null) {
+            task.setName(request.getName());
+        }
+
+        if (request.getDescription() != null) {
+            task.setDescription(request.getDescription());
+        }
+
+        if (request.getPointsReward() != null) {
+            task.setPointsReward(request.getPointsReward());
+        }
 
         return taskMapper.toTaskResponse(taskRepository.save(task));
     }
