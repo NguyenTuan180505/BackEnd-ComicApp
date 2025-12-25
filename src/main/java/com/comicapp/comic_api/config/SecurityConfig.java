@@ -27,19 +27,17 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                // BẬT CORS
+                // Bật CORS
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-                // TẮT CSRF (vì API dùng JWT)
+                // Tắt CSRF (dùng JWT)
                 .csrf(csrf -> csrf.disable())
 
-                .sessionManagement(sm ->
-                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                // Stateless
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
-
-                        // ===== PUBLIC =====
+                        // ==================== PUBLIC ====================
                         .requestMatchers(
                                 "/auth/login",
                                 "/auth/register",
@@ -47,7 +45,7 @@ public class SecurityConfig {
                                 "/api/public/**"
                         ).permitAll()
 
-                        // ===== USER + ADMIN =====
+                        // ==================== USER & ADMIN (GET) ====================
                         .requestMatchers(HttpMethod.GET,
                                 "/api/comments/**",
                                 "/api/tasks/**",
@@ -57,51 +55,53 @@ public class SecurityConfig {
                                 "/api/emotions/**",
                                 "/api/music/**",
                                 "/api/story-music/**",
-                                "/api/users/**"
+                                "/api/users/**",
+                                "/api/unlock-chapters/**"
                         ).hasAnyRole("USER", "ADMIN")
 
+                        // ==================== USER & ADMIN (POST) ====================
                         .requestMatchers(HttpMethod.POST,
                                 "/api/comments/**",
                                 "/api/tasks/**",
                                 "/api/favorites/**",
+                                "/api/unlock-chapters/**",
                                 "/api/users/change-password"
                         ).hasAnyRole("USER", "ADMIN")
 
+                        // ==================== USER & ADMIN (DELETE) ====================
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/comments/**",
                                 "/api/favorites/**"
                         ).hasAnyRole("USER", "ADMIN")
 
-                        // ===== ADMIN ONLY =====
+                        // ==================== ADMIN ONLY ====================
+                        // Chỉ áp dụng POST, PUT, DELETE cho các endpoint KHÔNG nằm trong list USER ở trên
                         .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
 
-                        // ===== CÒN LẠI =====
+                        // ==================== CÒN LẠI ====================
                         .anyRequest().authenticated()
                 )
 
+                // Thêm JWT filter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    // CẤU HÌNH CORS
+    // CORS (dev: cho phép tất cả, production chỉ cần thay "*" thành domain thật)
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-
         config.setAllowCredentials(true);
-
-        // 🔥 CHO PHÉP TẤT CẢ — tạm dùng khi dev (sau nên giới hạn domain)
-        config.setAllowedOriginPatterns(List.of("*"));
-
+        config.setAllowedOriginPatterns(List.of("*")); // dev
+        // production: List.of("https://yourdomain.com", "http://localhost:3000")
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-
         return source;
     }
 
