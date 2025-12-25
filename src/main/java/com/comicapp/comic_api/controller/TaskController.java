@@ -4,6 +4,7 @@ import com.comicapp.comic_api.dto.request.TaskCreateRequest;
 import com.comicapp.comic_api.dto.response.TaskResponse;
 import com.comicapp.comic_api.service.ITaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -37,10 +38,17 @@ public class TaskController {
     // HOÀN THÀNH TASK
     // =========================
     @PostMapping("/{taskId}/complete")
-    public String completeTask(@PathVariable Long taskId, @AuthenticationPrincipal String username) {
-        taskService.completeTask(username, taskId);
-        return "Hoàn thành nhiệm vụ thành công";
+    public ResponseEntity<?> completeTask(@PathVariable Long taskId,
+                                          @AuthenticationPrincipal String username) {
+
+        try {
+            taskService.completeTask(username, taskId);
+            return ResponseEntity.ok("Hoàn thành nhiệm vụ thành công");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
+
 
     // =========================
     // ADMIN TẠO TASK
@@ -50,4 +58,11 @@ public class TaskController {
         return taskService.createTask(request);
     }
 
+    @PutMapping("/{taskId}")
+    public TaskResponse updateTask(
+            @PathVariable Long taskId,
+            @RequestBody TaskCreateRequest request
+    ) {
+        return taskService.updateTask(taskId, request);
+    }
 }

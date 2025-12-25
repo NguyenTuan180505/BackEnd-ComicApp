@@ -4,6 +4,7 @@ import com.comicapp.comic_api.dto.request.UserCreateRequest;
 import com.comicapp.comic_api.dto.response.LoginResponse;
 import com.comicapp.comic_api.dto.response.UserResponse;
 import com.comicapp.comic_api.entity.User;
+import com.comicapp.comic_api.entity.UserPoints;
 import com.comicapp.comic_api.mapper.UserMapper;
 import com.comicapp.comic_api.repository.UserRepository;
 import com.comicapp.comic_api.service.IAuthService;
@@ -45,7 +46,15 @@ public class AuthService implements IAuthService {
         }
         User user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        UserPoints userPoints = new UserPoints();
+        userPoints.setUser(user);
+        userPoints.setPoints(0);
+
+        user.setPoints(userPoints);
+
         userRepository.save(user);
+
         return userMapper.toResponse(user);
     }
 }
